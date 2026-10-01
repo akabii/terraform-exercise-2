@@ -1,0 +1,28 @@
+stages:
+  - validate
+  - deploy
+
+image: hashicorp/terraform:1.9
+
+fmt:
+  stage: validate
+  script:
+    - cd terraform
+    - terraform fmt -check -recursive
+
+validate:
+  stage: validate
+  script:
+    - cd terraform
+    - terraform init -backend=false
+    - terraform validate
+
+deploy:
+  stage: deploy
+  variables:
+    AWS_ACCESS_KEY_ID: "AKIAEXAMPLEDONOTUSE"
+    AWS_SECRET_ACCESS_KEY: "wJalrXUtnFEMI-EXAMPLE-KEY"
+  script:
+    - cd terraform
+    - terraform init
+    - terraform apply -auto-approve
